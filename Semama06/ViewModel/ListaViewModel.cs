@@ -1,4 +1,6 @@
 ﻿using Entity;
+using Semama06.Model;
+using Semama06.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,27 +14,50 @@ namespace Semama06.ViewModel
 {
     public class ListaCategoriaViewModel : ViewModelBase
     {
-        public ObservableCollection<Categoria> Categorias { get; set; }
-        public ICommand NuevoComand { set; get; }
-        public ICommand ConsultarCommand { set; get; }
+
+        public Categoria _SelectedCategoria;
+        public Categoria SelectedCategoria
+        {
+            get { return _SelectedCategoria; }
+            set
+            {
+                if (_SelectedCategoria != value)
+                {
+                    _SelectedCategoria = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public ObservableCollection<Categoria> _Categorias;
+        public ObservableCollection<Categoria> Categorias
+        {
+            get { return _Categorias; }
+            set
+            {
+                if (Categorias != value)
+                {
+                    _Categorias = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public ICommand NuevoCommand { get; set; }
+        public ICommand ConsultarCommand { get; set; }
+
         public ListaCategoriaViewModel()
         {
-            Categorias = new Model.CategoriaModel().Categorias;
-            NuevoComand = new RelayCommand<Window>(
-                param => Abrir()
-                );
-            ConsultarCommand = new RelayCommand<object>(o => { Categorias = (new Model.CategoriaModel()).Categorias; });
-            void Abrir()
-            {
-                View.ManCategoria window = new View.ManCategoria();
-                window.ShowDialog();
-                o=> { Categoria = (new Model.CategoriaModel()).Categorias; };
-            }
-            void Abrir()
-            {
-                View.ManCategoria window = new View.ManCategoria();
-                window.ShowDialog()
-            }
+            Categorias = new CategoriaModel().Categorias;
+            NuevoCommand = new RelayCommand<Window>(param => Abrir());
+            ConsultarCommand = new RelayCommand<object>(o => { Categorias = (new CategoriaModel()).Categorias; });
+
+        }
+
+        void Abrir()
+        {
+            ManCategoria window = new ManCategoria(new Categoria());
+            window.Show();
         }
     }
 }
